@@ -1905,7 +1905,7 @@ void process_command(command_type cmd)
 
     case CMD_DISPLAY_RELIGION:
     {
-        describe_god(you.religion, true);
+        describe_god(you.religion);
         redraw_screen();
         break;
     }
