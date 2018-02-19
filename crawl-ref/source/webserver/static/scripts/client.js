@@ -289,7 +289,7 @@ function (exports, $, key_conversion, chat, comm) {
         {
             e.preventDefault();
             send_message("stop_stale_process_purge");
-            hide_dialog();
+            ui.hide_popup();
             return;
         }
         if ($("#force_terminate").is(":visible"))
@@ -488,6 +488,8 @@ function (exports, $, key_conversion, chat, comm) {
         location.reload();
     }
 
+    // newer code should use ui.show_popup() and ui.hide_popup()
+    // these functions are kept for compatibility with older versions of crawl
     function show_dialog(id)
     {
         $(".floating_dialog").hide();
@@ -610,18 +612,19 @@ function (exports, $, key_conversion, chat, comm) {
         else
             $("#exit_game_dump").hide();
 
-        show_dialog("#exit_game");
+        ui.show_popup("#exit_game");
     }
 
     function start_register()
     {
-        show_dialog("#register");
+        ui.hide_all_popups();
+        ui.show_popup("#register");
         $("#reg_username").focus();
     }
 
     function cancel_register()
     {
-        hide_dialog();
+        ui.hide_popup();
     }
 
     function register()
@@ -673,7 +676,8 @@ function (exports, $, key_conversion, chat, comm) {
     function rcfile_contents(data)
     {
         $("#rc_file_contents").val(data.contents);
-        show_dialog("#rc_edit");
+        ui.hide_all_popups();
+        ui.show_popup("#rc_edit");
         $("#rc_file_contents").focus();
     }
 
@@ -683,7 +687,7 @@ function (exports, $, key_conversion, chat, comm) {
             game_id: editing_rc,
             contents: $("#rc_file_contents").val()
         });
-        hide_dialog();
+        ui.hide_popup();
         return false;
     }
 
@@ -939,22 +943,22 @@ function (exports, $, key_conversion, chat, comm) {
     function force_terminate_no()
     {
         send_message("force_terminate", { answer: false });
-        hide_dialog();
+        ui.hide_popup();
     }
     function force_terminate_yes()
     {
         send_message("force_terminate", { answer: true });
-        hide_dialog();
+        ui.hide_popup();
     }
     function handle_stale_processes(data)
     {
         $(".game_name").html(data.game);
         $(".recover_timeout").html("" + data.timeout);
-        show_dialog("#stale_processes_message");
+        ui.show_popup("#stale_processes_message");
     }
     function handle_force_terminate(data)
     {
-        show_dialog("#force_terminate");
+        ui.show_popup("#force_terminate");
     }
 
     comm.register_handlers({
