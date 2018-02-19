@@ -1,6 +1,6 @@
-define(["exports", "jquery", "react", "comm", "user",
+define(["exports", "jquery", "react", "comm", "ui", "user",
         "jsx!lobby", "jsx!loader", "jsx!scores", "pubsub", "keyboard"],
-function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
+function (exports, $, React, comm, ui, user, LobbyRoot, Loader, Scores, pubsub) {
     "use strict";
 
     window.debug_mode = false;
@@ -114,7 +114,7 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
         {
             e.preventDefault();
             send_message("stop_stale_process_purge");
-            hide_dialog();
+            ui.hide_popup();
             return;
         }
         if ($("#force_terminate").is(":visible"))
@@ -212,6 +212,8 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
     }
 
     // Dialog handling ------------------------------------
+    // newer code should use ui.show_popup() and ui.hide_popup()
+    // these functions are kept for compatibility with older versions of crawl
     function show_dialog(id)
     {
         $(".floating_dialog").hide();

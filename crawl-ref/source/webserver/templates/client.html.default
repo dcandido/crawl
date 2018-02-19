@@ -10,6 +10,18 @@
 
     <div id="root"></div>
 
+    <div id="ui-stack"></div>
+
+    <div class="templates">
+        <div class="ui-popup">
+            <div class=ui-popup-overlay></div>
+            <div class=ui-popup-outer>
+                <div class=ui-popup-inner>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <img style="display:none;" id="loader_img" alt="" src="{{ static_url(title_img) }}">
 
     <script>
