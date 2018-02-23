@@ -308,6 +308,7 @@ public:
 
     void set_text(const formatted_string &fs);
     const formatted_string& get_text() { return m_text; };
+    void set_highlight_pattern(string pattern, bool hl_line = false);
 
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
@@ -324,10 +325,13 @@ protected:
     struct brkpt { unsigned int op, line; };
     vector<brkpt> m_brkpts;
     formatted_string m_text_wrapped;
+    ShapeBuffer m_hl_buf;
 #else
     vector<formatted_string> m_wrapped_lines;
 #endif
     i2 m_wrapped_size = { -1, -1 };
+    string hl_pat;
+    bool hl_line;
 };
 
 class UIImage : public UI
