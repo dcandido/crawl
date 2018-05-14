@@ -90,6 +90,7 @@ public:
 
     virtual ~UI() {
         UI::slots.event.remove_by_target(this);
+        _set_parent(nullptr);
     }
 
     i4 margin = {0,0,0,0};
@@ -138,6 +139,10 @@ public:
     static struct slots {
         Slot<UI, bool (const wm_event&)> event;
     } slots;
+
+    virtual shared_ptr<UI> get_child_at_offset(int x, int y) {
+        return nullptr;
+    };
 
 protected:
     i4 m_region;
@@ -194,7 +199,7 @@ public:
     virtual bool on_event(const wm_event& event) override;
     void set_child(shared_ptr<UI> child);
     virtual shared_ptr<UI> get_child() { return m_child; };
-    virtual shared_ptr<UI>* get_child_at_offset(int x, int y) override;
+    virtual shared_ptr<UI> get_child_at_offset(int x, int y) override;
 
 private:
     typedef UIContainer::iterator I;
@@ -227,6 +232,7 @@ class UIContainerVec : public UIContainer
 {
 public:
     virtual ~UIContainerVec() {}
+    virtual shared_ptr<UI> get_child_at_offset(int x, int y) override;
 private:
     typedef UIContainer::iterator I;
 
@@ -363,6 +369,7 @@ public:
     void pop_child();
     size_t num_children() const { return m_children.size(); }
     shared_ptr<UI> get_child(size_t idx) const { return m_children[idx]; };
+    virtual shared_ptr<UI> get_child_at_offset(int x, int y) override;
 
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
@@ -404,6 +411,7 @@ public:
         init_track_info();
         return m_row_info[y].flex_grow;
     }
+    virtual shared_ptr<UI> get_child_at_offset(int x, int y) override;
 
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
