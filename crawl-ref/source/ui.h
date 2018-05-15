@@ -40,6 +40,8 @@ struct UISizeReq
     int min, nat;
 };
 
+struct RestartAllocation {};
+
 template<typename, typename> class Slot;
 
 template<class Target, class... Args>
@@ -107,6 +109,7 @@ public:
     void _set_parent(UI* p);
     void _invalidate_sizereq(bool immediate = true);
     void _queue_allocation(bool immediate = true);
+    void set_allocation_needed() { alloc_queued = true; };
     void _expose();
 
     // Wrapper functions which handle common behavior
@@ -499,6 +502,8 @@ public:
     virtual void _render() override;
     virtual UISizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
+
+    i2 get_max_child_size();
 
 protected:
     shared_ptr<UI> m_root;

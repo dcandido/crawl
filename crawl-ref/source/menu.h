@@ -23,6 +23,7 @@
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
+#include "ui.h"
 
 class formatted_string;
 
@@ -284,6 +285,7 @@ enum MenuFlag
 };
 
 class UIMenu;
+class UIShowHide;
 
 ///////////////////////////////////////////////////////////////////////
 // NOTE
@@ -404,7 +406,15 @@ protected:
 
     resumable_line_reader *m_filter;
 
-    shared_ptr<UIMenu> menu_ui;
+    struct {
+        shared_ptr<UIPopup> popup;
+        shared_ptr<UIMenu> menu;
+        shared_ptr<UIScroller> scroller;
+        shared_ptr<UIText> title;
+        shared_ptr<UIText> more;
+        shared_ptr<UIShowHide> more_bin;
+        shared_ptr<UIBox> vbox;
+    } m_ui;
 
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
