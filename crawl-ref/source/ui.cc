@@ -62,6 +62,7 @@ static struct UIRoot
 public:
     void push_child(shared_ptr<UI> child, KeymapContext km);
     void pop_child();
+    size_t num_children() const { return m_root.num_children(); };
 
     void resize(int w, int h);
     void layout();
@@ -1745,6 +1746,11 @@ void ui_run_layout(shared_ptr<UI> root, const bool& done)
     while (!done && !crawl_state.seen_hups)
         ui_pump_events();
     ui_pop_layout();
+}
+
+bool ui_has_layout()
+{
+    return ui_root.num_children() > 0;
 }
 
 int ui_getch(KeymapContext km)
