@@ -67,7 +67,7 @@ for f in des_files:
                       "description" : map_desc.rstrip(),
                       "order" : int(map_order)})
 
-game_maps.sort(lambda x,y: cmp(x["order"], y["order"]))
+game_maps.sort(key = lambda x: x["order"])
 for m in game_maps:
     del m["order"]
 toml_out = {"maps" : game_maps}

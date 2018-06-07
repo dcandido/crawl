@@ -7,8 +7,10 @@
         "jsx": "static/scripts/contrib/jsx",
         "image": "static/scripts/contrib/image",
         "JSXTransformer": "static/scripts/contrib/JSXTransformer-0.10.0",
+        "contrib/simplebar": "static/scripts/contrib/simplebar",
         "client": "empty:",
-        "comm": "empty:"
+        "comm": "empty:",
+        "ui": "empty:",
     },
     jsx: {
         fileExtension: ".jsx"
