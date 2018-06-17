@@ -400,8 +400,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $more.html(util.formatted_string_to_html(desc.more));
         var scroll_elem = scroller($body[0]).scrollElement;
         scroll_elem.addEventListener("scroll", formatted_scroller_onscroll);
-        if (desc.start_at_end)
-            scroll_elem.scrollTop = 1000000000; // XXX: quick hack
         return $popup;
     }
 
@@ -420,8 +418,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             var body = $popup.find(".body")[0];
             var $scroller = $(scroller(body).scrollElement);
             ensure_formatted_scroller_line_height(body);
-            // note: scroll_to_end won't work with jQuery scrollTop() on WebKit
-            $scroller[0].scrollTop = msg.scroll*formatted_scroller_line_height;
+            if (msg.scroll == 2147483647) // FS_START_AT_END
+            {
+                // special case for webkit: excessively large values don't work
+                var inner_h = $(scroller(body).contentElement).outerHeight();
+                $scroller[0].scrollTop = inner_h - $(body).outerHeight();
+            }
+            else
+            {
+                msg.scroll *= formatted_scroller_line_height;
+                $scroller[0].scrollTop = msg.scroll;
+            }
         }
     }
 
