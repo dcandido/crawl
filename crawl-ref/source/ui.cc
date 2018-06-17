@@ -1192,7 +1192,7 @@ void UIScroller::_allocate_region()
     if (ch_reg[3] > m_region[3]) {
         const int x = m_region[0]+m_region[2];
         const float h_percent = m_region[3] / (float)ch_reg[3];
-        const int h = m_region[3]*min(max(0.05f, h_percent), 0.95f);
+        const int h = m_region[3]*min(max(0.05f, h_percent), 1.0f);
         const float scroll_percent = m_scroll/(float)(ch_reg[3]-m_region[3]);
         const int y = m_region[1] + (m_region[3]-h)*scroll_percent;
         GLWPrim rect(x+6, y, x+8, y+h);
