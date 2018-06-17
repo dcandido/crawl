@@ -387,8 +387,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
         $body.html(body_html);
         $more.html(util.formatted_string_to_html(desc.more));
-        scroller($body[0]).scrollElement
-            .addEventListener("scroll", formatted_scroller_onscroll);
+        var scroll_elem = scroller($body[0]).scrollElement;
+        scroll_elem.addEventListener("scroll", formatted_scroller_onscroll);
+        if (desc.start_at_end)
+            scroll_elem.scrollTop = 1000000000; // XXX: quick hack
         return $popup;
     }
 
