@@ -917,11 +917,13 @@ bool UISwitcher::on_event(const wm_event& event)
 
 shared_ptr<UI> UIGrid::get_child_at_offset(int x, int y)
 {
+    int lx = x - m_region[0];
+    int ly = y - m_region[1];
     int row = -1, col = -1;
     for (int i = 0; i < (int)m_col_info.size(); i++)
     {
         const auto& tr = m_col_info[i];
-        if (y >= tr.offset && y < tr.offset + tr.size)
+        if (lx >= tr.offset && lx < tr.offset + tr.size)
         {
             col = i;
             break;
@@ -930,7 +932,7 @@ shared_ptr<UI> UIGrid::get_child_at_offset(int x, int y)
     for (int i = 0; i < (int)m_row_info.size(); i++)
     {
         const auto& tr = m_row_info[i];
-        if (y >= tr.offset && y < tr.offset + tr.size)
+        if (ly >= tr.offset && ly < tr.offset + tr.size)
         {
             row = i;
             break;
@@ -940,8 +942,9 @@ shared_ptr<UI> UIGrid::get_child_at_offset(int x, int y)
         return nullptr;
     for (auto& child : m_child_info)
     {
-        if (child.pos[0] >= col && child.pos[0] < col + child.pos[1])
-        if (child.pos[1] >= row && child.pos[1] < row + child.pos[2])
+        if (child.pos[0] <= col && col < child.pos[0] + child.span[0])
+        if (child.pos[1] <= row && row < child.pos[1] + child.span[1])
+        if (pos_in_rect({x, y}, child.widget->get_region()))
             return child.widget;
     }
     return nullptr;
