@@ -314,6 +314,10 @@ public:
     {
         set_text(formatted_string::parse_string(text));
     }
+    UIText(formatted_string text) : UIText()
+    {
+        set_text(text);
+    }
     virtual ~UIText() {}
 
     void set_text(const formatted_string &fs);
