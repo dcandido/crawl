@@ -42,7 +42,6 @@ static i4 aabb_union(i4 a, i4 b)
 }
 
 
-#ifdef USE_TILE_LOCAL
 static inline bool pos_in_rect(i2 pos, i4 rect)
 {
     if (pos[0] < rect[0] || pos[0] >= rect[0]+rect[2])
@@ -51,7 +50,6 @@ static inline bool pos_in_rect(i2 pos, i4 rect)
         return false;
     return true;
 }
-#endif
 
 #ifndef USE_TILE_LOCAL
 static void ui_clear_text_region(i4 region);
