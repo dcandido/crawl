@@ -134,9 +134,6 @@ int formatted_scroller::show()
         return false;
     });
 
-    if (m_flags & FS_START_AT_END)
-        m_scroller->set_scroll(INT_MAX);
-
 #ifdef USE_TILE_WEB
     tiles_crt_control disable_crt(false);
     tiles.json_open_object();
@@ -146,6 +143,9 @@ int formatted_scroller::show()
     tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
     tiles.push_ui_layout("formatted-scroller", 2);
 #endif
+
+    if (m_flags & FS_START_AT_END)
+        m_scroller->set_scroll(INT_MAX);
 
     open_scrollers.push_back(this);
     ui_run_layout(move(popup), done);
