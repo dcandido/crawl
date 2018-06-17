@@ -345,6 +345,16 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     }
 
     var update_server_scroll_timeout = null;
+    var formatted_scroller_line_height = null;
+
+    function ensure_formatted_scroller_line_height(body)
+    {
+        if (formatted_scroller_line_height == null)
+        {
+            var span = $(scroller(body).contentElement).children("span");
+            formatted_scroller_line_height = span.outerHeight();
+        }
+    }
 
     function update_server_scroll()
     {
@@ -356,10 +366,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $popup = top_popup();
         if (!$popup.hasClass("formatted-scroller"))
             return;
-        var $scroller = $(scroller($popup.find(".body")).scrollElement);
-        var line_height = 21;
+        var body = $popup.find(".body")[0];
+        var $scroller = $(scroller(body).scrollElement);
+        ensure_formatted_scroller_line_height(body);
         comm.send_message("formatted_scroller_scroll", {
-            scroll: $scroller.scrollTop() / line_height,
+            scroll: $scroller.scrollTop() / formatted_scroller_line_height,
         });
     }
 
@@ -406,9 +417,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
         if (msg.scroll !== undefined && (!msg.from_webtiles || client.is_watching()))
         {
-            var $scroller = $(scroller($popup.find(".body")[0]).scrollElement);
-            var line_height = 21;
-            $scroller.scrollTop(msg.scroll*line_height);
+            var body = $popup.find(".body")[0];
+            var $scroller = $(scroller(body).scrollElement);
+            ensure_formatted_scroller_line_height(body);
+            // note: scroll_to_end won't work with jQuery scrollTop() on WebKit
+            $scroller[0].scrollTop = msg.scroll*formatted_scroller_line_height;
         }
     }
 
