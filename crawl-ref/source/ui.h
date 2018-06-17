@@ -168,21 +168,44 @@ protected:
         virtual ~iter_impl() {};
         virtual void operator++() = 0;
         virtual shared_ptr<UI>& operator*() = 0;
-        virtual bool equal (iter_impl &other) const = 0;
+        virtual iter_impl* clone() const = 0;
+        virtual bool equal(iter_impl &other) const = 0;
     };
 
 public:
     virtual ~UIContainer() {}
-    class iterator
+    class iterator : public std::iterator<input_iterator_tag, shared_ptr<UI>>
     {
     public:
         iterator(iter_impl *_it) : it(_it) {};
-        ~iterator() { delete it; };
+        ~iterator() { delete it; it = nullptr; };
+        iterator(const iterator& other) : it(other.it->clone()) {};
+        iterator& operator=(const iterator& other)
+        {
+            if (it != other.it)
+            {
+                delete it;
+                it = other.it->clone();
+            }
+            return *this;
+        }
+        iterator& operator=(iterator&& other)
+        {
+            if (it != other.it)
+            {
+                delete it;
+                it = other.it;
+                other.it = nullptr;
+            }
+            return *this;
+        }
+
         void operator++() { ++(*it); };
-        bool operator==(iterator &other) const {
+        bool operator==(const iterator& other) const
+        {
             return typeid(it) == typeid(other.it) && it->equal(*other.it);
         };
-        bool operator!=(iterator &other) const { return !(*this == other); }
+        bool operator!=(const iterator& other) const { return !(*this == other); }
         shared_ptr<UI>& operator*() { return **it; };
     protected:
         iter_impl *it;
@@ -190,7 +213,7 @@ public:
 
     virtual bool on_event(const wm_event& event) override;
 
-protected:
+public:
     virtual iterator begin() = 0;
     virtual iterator end() = 0;
 };
@@ -216,6 +239,7 @@ private:
     protected:
         virtual void operator++() override { state = true; };
         virtual shared_ptr<UI>& operator*() override { return c; };
+        virtual iter_impl_bin* clone() const override { return new iter_impl_bin(c, state); };
         virtual bool equal (iter_impl &_other) const override {
             iter_impl_bin &other = static_cast<iter_impl_bin&>(_other);
             return c == other.c && state == other.state;
@@ -225,9 +249,10 @@ private:
         bool state;
     };
 
-protected:
+public:
     virtual I begin() override { return I(new iter_impl_bin(m_child, false)); }
     virtual I end() override { return I(new iter_impl_bin(m_child, true)); }
+protected:
     shared_ptr<UI> m_child;
 };
 
@@ -248,6 +273,7 @@ private:
     protected:
         virtual void operator++() override { ++it; };
         virtual shared_ptr<UI>& operator*() override { return *it; };
+        virtual iter_impl_vec* clone() const override { return new iter_impl_vec(c, it); };
         virtual bool equal (iter_impl &_other) const override {
             iter_impl_vec &other = static_cast<iter_impl_vec&>(_other);
             return c == other.c && it == other.it;
@@ -257,9 +283,10 @@ private:
         C::iterator it;
     };
 
-protected:
+public:
     virtual I begin() override { return I(new iter_impl_vec(m_children, m_children.begin())); }
     virtual I end() override { return I(new iter_impl_vec(m_children, m_children.end())); }
+protected:
     vector<shared_ptr<UI>> m_children;
 };
 
@@ -469,12 +496,15 @@ private:
     protected:
         virtual void operator++() override { ++it; };
         virtual shared_ptr<UI>& operator*() override { return it->widget; };
+        virtual iter_impl_grid* clone() const override {
+            return new iter_impl_grid(c, it);
+        };
         virtual bool equal (iter_impl &_other) const override {
             iter_impl_grid &other = static_cast<iter_impl_grid&>(_other);
             return c == other.c && it == other.it;
         };
 
-        C c;
+        C& c;
         C::iterator it;
     };
 
