@@ -2103,8 +2103,8 @@ void Menu::webtiles_scroll(int first)
     m_ui.menu->get_item_region(first, &item_y, nullptr);
     if (m_ui.scroller->get_scroll() != item_y)
     {
-        webtiles_update_scroll_pos();
         m_ui.scroller->set_scroll(item_y);
+        webtiles_update_scroll_pos();
         ui_force_render();
     }
 }
