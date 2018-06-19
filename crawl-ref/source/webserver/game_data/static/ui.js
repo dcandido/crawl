@@ -59,7 +59,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .describe-generic").clone();
         var $body = $popup.children(".body");
-        $popup.find(".header > span").html(desc.title);
+        if (desc.title === "")
+            $popup.children(".header").remove();
+        else
+            $popup.find(".header > span").html(desc.title);
         $body.html(fmt_body_txt(desc.body + desc.footer));
         scroller($popup.children(".body")[0])
             .contentElement.className += " describe-generic-body";
