@@ -1219,7 +1219,7 @@ public:
 private:
     bool process_key(int ch) override
     {
-        int key = tolower(ch);
+        int key = toalower(ch);
 
 #ifdef USE_TILE_LOCAL
         const int line_height = tiles.get_crt_font()->char_height();
@@ -1256,7 +1256,7 @@ void show_help(int section, string highlight_string)
 {
     help_popup help(section);
     help.highlight = highlight_string;
-    int key = help.show();
+    int key = toalower(help.show());
 
     switch (key)
     {
