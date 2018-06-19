@@ -2099,7 +2099,8 @@ void Menu::webtiles_write_menu(bool replace) const
 
 void Menu::webtiles_scroll(int first)
 {
-    int item_y = 0; // XXX
+    int item_y;
+    m_ui.menu->get_item_region(first, &item_y, nullptr);
     if (m_ui.scroller->get_scroll() != item_y)
     {
         webtiles_update_scroll_pos();
