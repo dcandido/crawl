@@ -1599,6 +1599,7 @@ static void remap_key(wm_event &event)
 
 void ui_force_render()
 {
+    ui_root.layout();
     ui_root.render();
 }
 
