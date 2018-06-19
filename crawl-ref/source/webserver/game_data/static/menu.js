@@ -323,8 +323,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             }
         }
-
-        console.assert(menu.first_visible && menu.last_visible);
     }
 
     function update_server_scroll()
