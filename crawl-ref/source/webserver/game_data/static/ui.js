@@ -348,15 +348,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     }
 
     var update_server_scroll_timeout = null;
-    var formatted_scroller_line_height = null;
+    var formatted_scroller_monitor_scrolling = true;
 
-    function ensure_formatted_scroller_line_height(body)
+    function formatted_scroller_line_height(body)
     {
-        if (formatted_scroller_line_height == null)
-        {
-            var span = $(scroller(body).contentElement).children("span");
-            formatted_scroller_line_height = span.outerHeight();
-        }
+        var span = $(scroller(body).contentElement).children("span")[0];
+        var rect = span.getBoundingClientRect();
+        return rect.bottom - rect.top;
     }
 
     function update_server_scroll()
@@ -370,15 +368,22 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         if (!$popup.hasClass("formatted-scroller"))
             return;
         var body = $popup.find(".body")[0];
-        var $scroller = $(scroller(body).scrollElement);
-        ensure_formatted_scroller_line_height(body);
+        var container = scroller(body).scrollElement;
+        var line_height = formatted_scroller_line_height(body);
         comm.send_message("formatted_scroller_scroll", {
-            scroll: $scroller.scrollTop() / formatted_scroller_line_height,
+            scroll: Math.round(container.scrollTop / line_height),
         });
     }
 
     function formatted_scroller_onscroll()
     {
+        if (!formatted_scroller_monitor_scrolling)
+        {
+            // don't tell the server we scrolled, when we did so because the
+            // server told us to; not absolutely necessary, but nice to have
+            formatted_scroller_monitor_scrolling = true;
+            return;
+        }
         if (!update_server_scroll_timeout)
             update_server_scroll_timeout = setTimeout(update_server_scroll, 100);
     }
@@ -420,7 +425,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             var body = $popup.find(".body")[0];
             var $scroller = $(scroller(body).scrollElement);
-            ensure_formatted_scroller_line_height(body);
             if (msg.scroll == 2147483647) // FS_START_AT_END
             {
                 // special case for webkit: excessively large values don't work
@@ -429,7 +433,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             }
             else
             {
-                msg.scroll *= formatted_scroller_line_height;
+                var line_height = formatted_scroller_line_height(body);
+                msg.scroll *= line_height;
+                formatted_scroller_monitor_scrolling = false;
                 $scroller[0].scrollTop = msg.scroll;
             }
         }
