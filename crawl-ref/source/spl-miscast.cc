@@ -537,7 +537,7 @@ bool MiscastEffect::_sleep(int dur)
         target->put_to_sleep(act_source, dur);
     return true;
 }
-
+/*
 bool MiscastEffect::_send_to_abyss()
 {
     // The Abyss depth check is duplicated here (and the banishment forced if
@@ -552,7 +552,7 @@ bool MiscastEffect::_send_to_abyss()
     target->banish(act_source, cause, target->get_experience_level(), true);
     return true;
 }
-
+*/
 // XXX: Mostly duplicated from cast_malign_gateway.
 bool MiscastEffect::_malign_gateway(bool hostile)
 {
@@ -1263,8 +1263,7 @@ void MiscastEffect::_translocation(int severity)
         break;
 
     case 2:         // less harmless
-    reroll_2:
-        switch (random2(7))
+        switch (random2(6))
         {
         case 0:
         case 1:
@@ -1295,6 +1294,7 @@ void MiscastEffect::_translocation(int severity)
                 if (target->alive())
                     target->confuse(act_source, 5 + random2(3));
             }
+            }
             break;
         case 5:
         {
@@ -1306,17 +1306,11 @@ void MiscastEffect::_translocation(int severity)
                 all_msg = "Space twists in upon itself!";
             break;
         }
-        case 6:
-            if (!_send_to_abyss())
-                goto reroll_2;
-            break;
-        }
         break;
 
     case 3:         // much less harmless
-    reroll_3:
         // Don't use the last case for monsters.
-        switch (random2(target->is_player() ? 4 : 3))
+        switch (random2(target->is_player() ? 3 : 2))
         {
         case 0:
             {
@@ -1350,10 +1344,6 @@ void MiscastEffect::_translocation(int severity)
             }
             break;
         case 2:
-            if (!_send_to_abyss())
-                goto reroll_3;
-            break;
-        case 3:
             contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
             break;
         }
@@ -1502,7 +1492,7 @@ void MiscastEffect::_summoning(int severity)
 
         while (reroll)
         {
-            switch (random2(5))
+            switch (random2(4))
             {
             case 0:
             {
@@ -1541,10 +1531,6 @@ void MiscastEffect::_summoning(int severity)
             }
 
             case 3:
-                reroll = !_send_to_abyss();
-                break;
-
-            case 4:
                 reroll = !_malign_gateway(target->is_player());
                 break;
             }
@@ -3029,9 +3015,8 @@ void MiscastEffect::_zot()
         break;
     case 2:
     case 3:    // other misc stuff
-    reroll_2:
         // Cases at the end are for players only.
-        switch (random2(target->is_player() ? 13 : 9))
+        switch (random2(target->is_player() ? 12 : 8))
         {
         case 0:
             target->paralyse(act_source, 2 + random2(4), cause);
@@ -3043,10 +3028,6 @@ void MiscastEffect::_zot()
             target->rot(act_source, 3 + random2(3));
             break;
         case 3:
-            if (!_send_to_abyss())
-                goto reroll_2;
-            break;
-        case 4:
             if (!target->is_player())
                 target->polymorph(0);
             else if (coinflip())
@@ -3061,8 +3042,8 @@ void MiscastEffect::_zot()
                 do_msg();
             }
             break;
+        case 4:
         case 5:
-        case 6:
             roll = random2(3); // Give 2 of 3 effects.
             if (roll != 0)
                 target->confuse(act_source, 5 + random2(3));
@@ -3086,34 +3067,34 @@ void MiscastEffect::_zot()
                 }
             }
             break;
-        case 7:
+        case 6:
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
             do_msg();
             target->drain_exp(act_source, false, 100);
             break;
-        case 8:
+        case 7:
             if (target->is_player())
                 contaminate_player(2000 + random2avg(13000, 2), false);
             else
                 target->polymorph(0);
             break;
-        case 9:
+        case 8:
             if (you.magic_points > 0)
             {
                 dec_mp(10 + random2(21));
                 canned_msg(MSG_MAGIC_DRAIN);
             }
             break;
-        case 10:
+        case 9:
             lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
-        case 11:
+        case 10:
             mpr("An unnatural silence engulfs you.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
             break;
-        case 12:
+        case 11:
             if (!mons_word_of_recall(nullptr, 2 + random2(3)))
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
