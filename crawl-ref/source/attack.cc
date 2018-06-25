@@ -451,19 +451,19 @@ bool attack::distortion_affects_defender()
     {
         SMALL_DMG,
         BIG_DMG,
-        BANISH,
+        //BANISH,
         BLINK,
-        TELE_INSTANT,
-        TELE_DELAYED,
+        //TELE_INSTANT,
+        //TELE_DELAYED,
         NONE
     };
 
     const disto_effect choice = random_choose_weighted(33, SMALL_DMG,
                                                        22, BIG_DMG,
-                                                       5,  BANISH,
-                                                       15, BLINK,
-                                                       10, TELE_INSTANT,
-                                                       10, TELE_DELAYED,
+                                                       //0,  BANISH,
+                                                       40, BLINK,
+                                                       //0, TELE_INSTANT,
+                                                       //0, TELE_DELAYED,
                                                        5,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
@@ -487,6 +487,7 @@ bool attack::distortion_affects_defender()
         if (!defender->no_tele(true, false))
             blink_fineff::schedule(defender);
         break;
+    /*
     case BANISH:
         if (defender_visible)
             obvious_effect = true;
@@ -510,6 +511,7 @@ bool attack::distortion_affects_defender()
         else
             defender->teleport();
         break;
+    */
     case NONE:
         // Do nothing
         break;
