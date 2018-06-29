@@ -26,7 +26,8 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREY, BROWN,
       'T', {}, BRANCH_NOISE_NORMAL },
 
-    { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 2, 10,
+// TODO generating this on floor 123 is a hacky way of removing it.
+    { BRANCH_ORC, BRANCH_DUNGEON, 123, 123, 2, 10,
       BFLAG_SPOTTY,
       DNGN_ENTER_ORC, DNGN_EXIT_ORC, NUM_FEATURES,
       "Orcish Mines", "the Orcish Mines", "Orc",
@@ -52,7 +53,8 @@ const Branch branches[NUM_BRANCHES] =
       'K', {}, BRANCH_NOISE_NORMAL },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 6, 10,
+// TODO generating this on floor 123 is a hacky way of removing it.
+    { BRANCH_LAIR, BRANCH_DUNGEON, 123, 123, 6, 10,
       BFLAG_NONE,
       DNGN_ENTER_LAIR, DNGN_EXIT_LAIR, NUM_FEATURES,
       "Lair", "the Lair of Beasts", "Lair",
@@ -100,7 +102,8 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'M', { RUNE_SLIME }, BRANCH_NOISE_QUIET },
 
-    { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
+// TODO generating this on floor 123 is a hacky way of removing it.
+    { BRANCH_VAULTS, BRANCH_DUNGEON, 123, 123, 5, 19,
       BFLAG_DANGEROUS_END,
       DNGN_ENTER_VAULTS, DNGN_EXIT_VAULTS, NUM_FEATURES,
       "Vaults", "the Vaults", "Vaults",
