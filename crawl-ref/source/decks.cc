@@ -90,7 +90,6 @@ typedef vector<card_with_weights> deck_archetype;
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       {5, 5, 5} },
-    { CARD_EXILE,      {0, 1, 2} },
     { CARD_ELIXIR,     {5, 5, 5} },
     { CARD_CLOUD,      {5, 5, 5} },
     { CARD_VELOCITY,   {5, 5, 5} },
@@ -226,7 +225,6 @@ const char* card_name(card_type card)
     switch (card)
     {
     case CARD_VELOCITY:        return "Velocity";
-    case CARD_EXILE:           return "Exile";
     case CARD_ELIXIR:          return "the Elixir";
     case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
@@ -1295,37 +1293,6 @@ static void _velocity_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _exile_card(int power, deck_rarity_type rarity)
-{
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return;
-    }
-
-    // Calculate how many extra banishments you get.
-    const int power_level = _get_power_level(power, rarity);
-    int extra_targets = power_level + random2(1 + power_level);
-
-    for (int i = 0; i < 1 + extra_targets; ++i)
-    {
-        // Pick a random monster nearby to banish (or yourself).
-        monster* mon_to_banish = choose_random_nearby_monster(1);
-
-        // Bonus banishments only banish monsters.
-        if (i != 0 && !mon_to_banish)
-            continue;
-
-        if (!mon_to_banish) // Banish yourself!
-        {
-            banished("drawing a card");
-            break;              // Don't banish anything else.
-        }
-        else
-            mon_to_banish->banish(&you);
-    }
-}
-
 static void _shaft_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2067,7 +2034,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     switch (which_card)
     {
     case CARD_VELOCITY:         _velocity_card(power, rarity); break;
-    case CARD_EXILE:            _exile_card(power, rarity); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
     case CARD_SHAFT:            _shaft_card(power, rarity); break;

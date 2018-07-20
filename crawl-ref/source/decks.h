@@ -64,9 +64,7 @@ enum card_type
     CARD_TOMB,                // a ring of rock walls
 #if TAG_MAJOR_VERSION == 34
     CARD_BANSHEE,             // cause fear and drain
-#endif
     CARD_EXILE,               // banish others, maybe self
-#if TAG_MAJOR_VERSION == 34
     CARD_SOLITUDE,            // dispersal
     CARD_WARPWRIGHT,          // create teleport trap
 #endif
