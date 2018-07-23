@@ -464,8 +464,6 @@ static const ability_def Ability_List[] =
       {fail_basis::invo, 85, 7, 20}, abflag::none },
     { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 500, 10,
       {fail_basis::invo, 70, 4, 25}, abflag::none },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 10, 0, 500, 28,
-      {fail_basis::invo, 80, 4, 25}, abflag::pain },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
       {fail_basis::invo}, abflag::none },
 
@@ -953,7 +951,6 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-    case ABIL_LUGONU_ABYSS_ENTER:
         if (brdepth[BRANCH_ABYSS] == -1)
             return ABIL_NON_ABILITY;
         else
@@ -1492,15 +1489,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_LUGONU_CORRUPT:
         return !is_level_incorruptible(quiet);
-
-    case ABIL_LUGONU_ABYSS_ENTER:
-        if (player_in_branch(BRANCH_ABYSS))
-        {
-            if (!quiet)
-                mpr("You're already here!");
-            return false;
-        }
-        return true;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (you.spell_no == 0)
@@ -2600,17 +2588,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (!lugonu_corrupt_level(300 + you.skill(SK_INVOCATIONS, 15)))
             return SPRET_ABORT;
         break;
-
-    case ABIL_LUGONU_ABYSS_ENTER:
-    {
-        fail_check();
-        // Deflate HP.
-        dec_hp(random2avg(you.hp, 2), false);
-
-        no_notes nx; // This banishment shouldn't be noted.
-        banished();
-        break;
-    }
 
     case ABIL_LUGONU_BLESS_WEAPON:
         fail_check();
