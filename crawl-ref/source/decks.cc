@@ -250,6 +250,7 @@ const char* card_name(card_type card)
 
 #if TAG_MAJOR_VERSION == 34
     // Removed cards.
+    case CARD_EXILE:           return "Exile";
     case CARD_MERCENARY:       return "the Mercenary";
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_CURSE:           return "the Curse";
@@ -2073,6 +2074,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
 #if TAG_MAJOR_VERSION == 34
+    case CARD_EXILE:
     case CARD_VENOM:
     case CARD_HAMMER:
     case CARD_FORTITUDE:
